@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'core',
+    'rossoft',
     'rossoftai',
     'rest_framework',
     'rest_framework.authtoken',

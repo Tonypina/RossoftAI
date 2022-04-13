@@ -47,7 +47,7 @@ class Report(models.Model):
     reportobjects = ReportObjects()
 
     class Meta:
-        ordering = ('-datetime')
+        ordering = ('-datetime',)
 
     def __str__(self):
         return self.title
