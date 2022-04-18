@@ -32,6 +32,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    # 'django-picklefield',
+
+    'numpy',
+    'pandas',
+    'picklefield',
+    'apyori',
+    # 'django-pandas',
 ]
 
 MIDDLEWARE = [
@@ -51,14 +58,15 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
+    'http://localhost:8081',
+    'http://127.0.0.1:8081',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
 )
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'contenttype',
+    'Content-Type',
+    'Content-Disposition',
 ]
 
 ROOT_URLCONF = 'rossoft.urls'
@@ -144,5 +152,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+    'DEFAULT_PARSER_CLASES': {
+        'rest_framework.parsers.MultiPartParser'
+    }
 }
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240

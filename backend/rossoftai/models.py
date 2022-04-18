@@ -4,10 +4,10 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 def user_directory_report_path(instance, filename):
-    return 'rossoftai/reports/{0}/{1}/{2}'.format(instance.algorithm, instance.algorithm, filename)
+    return 'rossoftai/reports/{0}/{1}'.format(instance.algorithm, filename)
 
 def user_directory_data_path(instance, filename):
-    return 'rossoftai/data/{0}/{1}'.format(instance.algorithm, filename)
+    return 'rossoftai/data/{0}'.format(filename)
 
 class Data(models.Model):
 
@@ -15,9 +15,7 @@ class Data(models.Model):
         def get_queryset(self):
             return super().get_queryset()
 
-    data_source = models.FileField(upload_to=user_directory_data_path, null=False)
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='data_user')
+    file = models.FileField(upload_to=user_directory_data_path, null=False);
 
     objects = models.Manager()
     dataobjects = DataObjects()

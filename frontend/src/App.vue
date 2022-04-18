@@ -1,30 +1,37 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div class="grid surface-200">
+    <Menu/>
+    <div class="p-0 col-10 col-offset-2 fixed">
+      <Nav/>
+    </div>
+    <div class="p-0 col-10 col-offset-2 mt-7">
+      <router-view/>
+    </div> 
+  </div>
 </template>
 
 <style lang="scss">
+@import "~primeflex/primeflex.css";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  // font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+  color: black;
 }
 </style>
+
+<script>
+  import Menu from './components/Menu.vue'
+  import Nav from './components/Nav.vue'
+
+  export default {
+    components: {
+      Menu,
+      Nav
+    }
+  }
+</script>

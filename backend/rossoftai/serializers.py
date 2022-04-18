@@ -1,14 +1,12 @@
-from dataclasses import field
 from rest_framework import serializers
 from .models import Data, Report
+from .algorithms import Algorithms
 
 class DataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Data
         fields = (
-            'id',
-            'data_source',
-            'user'
+            'file',
         )
 
 class ReportSerializer(serializers.ModelSerializer):
