@@ -58,22 +58,22 @@
             })
           .then(function (response) {
             console.log(response);
-            console.log(typeof (response.data.file))
-            console.log(file_extension(response.data.file))
+            // console.log(typeof (response.data.file))
+            // console.log(file_extension(response.data.file))
 
-            axiosInst.get('/rossoftai/apriori/',{
-              params: {
-                type: file_extension(response.data.file),
-                URL: response.data.file,
-                support: 0.01,
-                confidence: 0.3,
-                lift: 2
-              }
-            }).then(function (response) {
-              console.log(response)
-            }).catch(function (error) {
-              console.log(error)
-            })
+            // axiosInst.get('/rossoftai/apriori/',{
+            //   params: {
+            //     type: file_extension(response.data.file),
+            //     URL: response.data.file,
+            //     support: 0.01,
+            //     confidence: 0.3,
+            //     lift: 2
+            //   }
+            // }).then(function (response) {
+            //   console.log(response)
+            // }).catch(function (error) {
+            //   console.log(error)
+            // })
           })
           .catch(function (error) {
             console.log(error)

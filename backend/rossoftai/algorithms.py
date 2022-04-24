@@ -1,5 +1,4 @@
 import pandas as pd
-from rossoft.settings import BASE_DIR, MEDIA_ROOT
 import numpy as np
 from apyori import apriori
 
@@ -7,12 +6,18 @@ class Algorithms:
 
     def __init__( self, dataType, dataURL ):
 
-        if dataType == 'csv':
-            self.__data = pd.read_csv( dataURL, header=None )
-        elif dataType == 'xlsx':
-            self.__data = pd.read_excel( '..'+dataURL )
-        else:
-            self.__data = None
+        # file = open(  )
+        
+        self.__data = pd.read_csv(dataURL, sep=',', header=None)
+        # if dataType == 'csv':
+        #     self.__data = pd.read_csv( '..'+dataURL, header=None )
+        # elif dataType == 'xlsx':
+        #     self.__data = pd.read_excel( '..'+dataURL )
+        # else:
+        #     self.__data = None
+
+    def __init__( self, dataFile ):
+        self.__data =pd.read_csv( dataFile, header=None )    
 
     def apriori_freq_dist( self ):
 
@@ -30,7 +35,7 @@ class Algorithms:
     def apriori_algorithm( self, support, confidence, lift ):
 
         # Pocesamiento
-        List = self.__data.stack().groupby(level=0).apply(list).toList()
+        List = self.__data.stack().groupby(level=0).apply(list).tolist()
 
         Reglas = apriori(List, min_support=support, min_confidence=confidence, min_lift=lift)
 

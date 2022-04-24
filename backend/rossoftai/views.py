@@ -1,7 +1,10 @@
+from statistics import mode
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
+
+from django.core.files.storage import default_storage
 
 from .models import Data, Report
 from .serializers import DataSerializer, ReportSerializer
@@ -23,18 +26,33 @@ class UploadDataView(APIView):
     
         data = request.data.get('file', None)
 
+        with default_storage.open('rossoftai/data/_'+data.name, mode='wb') as destination:
+            line = 1
+            for chunk in data.chunks():
+                print(chunk)
+                destination.write(chunk)
+                # if ( line > 4 ):
+                    # destination.write(chunk)
+                # else:
+                #     line = line + 1
+                    
         serializer = DataSerializer(data=request.data)
         if serializer.is_valid():
+
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            algthm = Algorithms( default_storage.open('rossoftai/data/_'+data.name, mode='rb') )
+            # algthm = Algorithms(  default_storage.open('rossoftai/data/movies.csv', mode='rb') )
+
+            return Response(
+                algthm.apriori_algorithm( 0.01, 0.3, 2 ),
+                status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AprioriView(APIView):
 
     def get(self, request):
         print(request.query_params)
-
-        # return Response(request.query_params, status=status.HTTP_200_OK)
 
         algthm = Algorithms( request.query_params.get('type'), request.query_params.get('URL') )
 
