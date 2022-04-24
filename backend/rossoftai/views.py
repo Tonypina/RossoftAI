@@ -27,15 +27,17 @@ class UploadDataView(APIView):
         data = request.data.get('file', None)
 
         with default_storage.open('rossoftai/data/_'+data.name, mode='wb') as destination:
-            line = 1
             for chunk in data.chunks():
-                print(chunk)
                 destination.write(chunk)
-                # if ( line > 4 ):
-                    # destination.write(chunk)
-                # else:
-                #     line = line + 1
-                    
+
+        with default_storage.open('rossoftai/data/_'+data.name, mode='r') as fp:
+            lines = fp.readlines()
+
+        with default_storage.open('rossoftai/data/_'+data.name, mode='w') as fp:
+            for number, line in enumerate(lines):
+                if number not in [0, 1, 2, 3]:
+                    fp.write(line)
+
         serializer = DataSerializer(data=request.data)
         if serializer.is_valid():
 
