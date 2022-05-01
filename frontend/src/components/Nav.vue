@@ -1,5 +1,5 @@
 <template>
-  <nav class="h-4rem bg-white shadow-5">
+  <nav class="h-4rem bg-white shadow-5 z-5">
 
   </nav>
 </template>

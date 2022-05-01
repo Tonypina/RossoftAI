@@ -19,7 +19,7 @@ class ReportListView(APIView):
 
         return Response(serializer.data)
 
-class UploadDataView(APIView):
+class AlgorithmView(APIView):
     parser_classes = (FileUploadParser,)
     
     def post(self, request):
@@ -42,27 +42,45 @@ class UploadDataView(APIView):
         if serializer.is_valid():
 
             serializer.save()
-
-            algthm = Algorithms( default_storage.open('rossoftai/data/_'+data.name, mode='rb') )
-            # algthm = Algorithms(  default_storage.open('rossoftai/data/movies.csv', mode='rb') )
-
+            
             return Response(
-                algthm.apriori_algorithm( 0.01, 0.3, 2 ),
+                '_'+data.name,
                 status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class AprioriView(APIView):
-
     def get(self, request):
+
         print(request.query_params)
 
-        algthm = Algorithms( request.query_params.get('type'), request.query_params.get('URL') )
+        algthm = Algorithms( default_storage.open('rossoftai/data/'+request.query_params.get('name'), mode='rb') )
+        
+        algthm_type = request.query_params.get('algthm_type')
+        if ( algthm_type == 'apriori' ):
 
-        return Response(
-            algthm.apriori_algorithm(
-                request.query_params.get('support'),
-                request.query_params.get('confidence'),
-                request.query_params.get('lift')
-            ),
-            status=status.HTTP_200_OK
-        )
+            return Response(
+                (algthm.apriori_algorithm(
+                    float(request.query_params.get('support')),
+                    float(request.query_params.get('confidence')),
+                    int(request.query_params.get('lift'))
+                ),
+                algthm.apriori_freq_dist()),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'metrics' ):
+
+            return Response(
+                algthm.metrics( request.query_params.get('metricType') ),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'selec' ):
+
+            return Response(
+                algthm.caracteristic_selection(),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'hclust' ):
+
+            return Response(
+                algthm.h_clust(),
+                status=status.HTTP_200_OK
+            )
