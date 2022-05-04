@@ -1,3 +1,4 @@
+from cmath import isnan
 from ctypes.wintypes import COLORREF
 import pandas as pd
 import numpy as np
@@ -56,19 +57,31 @@ class Algorithms:
 
         return ResultadosJSON
 
-    def metrics( self, metricType ):
+    def metrics( self, metricType, lambdaParam ):
 
-        Dist = cdist(self.__data, self.__data, metric=metricType)
-        return Dist
+        if (lambdaParam == None):
+            return pd.DataFrame(cdist(self.__data, self.__data, metric=metricType)).to_json(orient='records')
+        else:
+            return cdist(self.__data, self.__data, metric=metricType, p=float(lambdaParam))
+    
+    def get_distance( self, metricType, lambdaParam, obj_1, obj_2 ):
+
+        if (lambdaParam == None):
+            if (metricType == 'euclidean'):
+                return distance.euclidean(self.__data.iloc[obj_1], self.__data.iloc[obj_2])
+            elif (metricType == 'chebyshev'):
+                return distance.chebyshev(self.__data.iloc[obj_1], self.__data.iloc[obj_2])
+            elif (metricType == 'cityblock'):
+                return distance.cityblock(self.__data.iloc[obj_1], self.__data.iloc[obj_2])
+            elif (metricType == 'minkowski'):
+                return distance.minkowski(self.__data.iloc[obj_1], self.__data.iloc[obj_2])
+        else:
+            return distance.minkowski(self.__data.iloc[obj_1], self.__data.iloc[obj_2])
 
     def caracteristic_selection( self ):
 
         CorrData = self.__data.corr(method='pearson')
         MatrizInf = np.triu(CorrData)
-
-        # plt.figure(figsize=(14,7))
-        # sns.heatmap(CorrData, cmap='RdBu_r', annot=True, mask=MatrizInf)
-        # plt.savefig('media/rossoftai/data/correlation_heatmap.png')
 
         return (CorrData, MatrizInf)
 

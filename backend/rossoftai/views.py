@@ -67,7 +67,21 @@ class AlgorithmView(APIView):
         elif ( algthm_type == 'metrics' ):
 
             return Response(
-                algthm.metrics( request.query_params.get('metricType') ),
+                algthm.metrics( 
+                    request.query_params.get('metric'), 
+                    request.query_params.get('lambda')
+                ),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'distance' ):
+
+            return Response(
+                algthm.get_distance( 
+                    request.query_params.get('metric'), 
+                    request.query_params.get('lambda'),
+                    int(request.query_params.get('obj_1')),
+                    int(request.query_params.get('obj_2'))
+                ),
                 status=status.HTTP_200_OK
             )
         elif ( algthm_type == 'selec' ):

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid surface-200">
+  <div class="grid">
     <Menu/>
     <div class="p-0 col-9 col-offset-3 fixed z-5">
       <Nav/>

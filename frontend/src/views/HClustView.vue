@@ -15,8 +15,16 @@
       </DataTable>
       <h2>Selección de Características</h2>
       <Button label="Obtener mapa de calor" @click="getHeatmap" />
-      <div class="pt-7">
-        <highcharts :options="chartOptions"></highcharts>
+      <div class="grid pt-7">
+        <div class="col-8">
+          <highcharts :options="chartOptions"></highcharts>
+        </div>
+        <div class="col-4">
+          <h3>Seleccione las características que desea conservar</h3>
+          <MultiSelect v-model="selectedCaracteristics" :options="caracteristics" optionLabel="caracteristic"
+            placeholder="Seleccione las características" display="chip" />
+          <Button label="Aceptar" @click="sendCaracteristics" />
+        </div>
       </div>
     </div>
   </div>
@@ -35,9 +43,9 @@
   import Row from 'primevue/row';
   import InputText from 'primevue/inputtext';
   import Button from 'primevue/button';
+  import MultiSelect from 'primevue/multiselect';
 
-  import { isProxy, toRaw } from 'vue';
-
+  import Functions from '../functions.js'
 
   import {
     axiosInst
@@ -53,6 +61,11 @@
     return axis.categories[point[isY ? 'y' : 'x']];
   }
 
+  function round(num) {
+    var m = Number((Math.abs(num) * 100).toPrecision(15));
+    return Math.round(m) / 100 * Math.sign(num);
+  }
+
   export default defineComponent({
     name: 'HClustView',
 
@@ -63,16 +76,19 @@
       Column,
       Row,
       InputText,
-      Button
+      Button,
+      MultiSelect
     },
     data() {
       return {
+        selectedCaracteristics: null,
         data_name: null,
         correlational_data: null,
         file: '',
         fileLimit: 1,
         datos: null,
         columns_datos: null,
+        caracteristics: [],
         chartOptions: {
           chart: {
             type: 'heatmap',
@@ -93,7 +109,6 @@
           yAxis: {
             categories: null,
             title: null,
-            // reversed: true
           },
 
           accessibility: {
@@ -125,13 +140,12 @@
 
           tooltip: {
             formatter: function () {
-              return '<b>' + getPointCategoryName(this.point, 'x') + '</b> sold <br><b>' +
-                this.point.value + '</b> items on <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
+              return '<b>' + getPointCategoryName(this.point, 'x') +
+                this.point.value + '</b> items en <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
             }
           },
 
           series: [{
-            // name: 'Sales per employee',
             borderWidth: 1,
             data: [],
             dataLabels: {
@@ -161,8 +175,7 @@
     },
     created() {
       this.columns_datos = [],
-      this.datos = []
-      // this.chartOptions.series.data = new Array()
+        this.datos = []
     },
     methods: {
       uploader(event) {
@@ -215,14 +228,11 @@
             name: this.data_name
           }
         }).then(response => {
-          
+
           var headersList = Object.keys(response.data[0])
 
           this.chartOptions.xAxis.categories = headersList
           this.chartOptions.yAxis.categories = headersList
-
-          console.log(typeof this.chartOptions.series.data)
-          console.log(response.data[1])
 
           let arreglo = new Array()
 
@@ -231,13 +241,34 @@
               arreglo[arreglo.length] = [
                 j,
                 i,
-                response.data[1][i][j]
+                round(response.data[1][i][j])
               ]
             }
           }
-          console.log(arreglo)
           this.chartOptions.series[0].data = arreglo
-          console.log(this.chartOptions.series.data)
+
+          headersList.forEach(element => {
+            this.caracteristics[this.caracteristics.length] = {
+              caracteristic: element
+              // value: element
+            }
+          });
+        })
+      },
+
+      sendCaracteristics(event) {
+        
+        var caracteristicList = new Array()
+
+        this.selectedCaracteristics.forEach(element => {
+          caracteristicList[caracteristicList.length] = element.caracteristic          
+        })
+
+        axiosInst.get('/rossoftai/runAlgorithm/', {
+          params: {
+            algthm_type: "selec",
+            name: this.data_name
+          }
         })
       }
     }
