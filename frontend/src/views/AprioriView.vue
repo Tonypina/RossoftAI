@@ -1,9 +1,9 @@
 <template>
   <div class="apriori pt-5 pb-5 px-8">
-    <h1 class="another-font">Algoritmo Apriori</h1>
+    <h1 class="another-font">Módulo de Reglas de Asociación</h1>
     <div class="grid pt-5 pb-5">
       <div class="col-7 pt-2">
-        <h3 class="pb-2">Ingrese la fuente de datos con la que trabajará</h3>
+        <h3 class="pb-2">Ingrese la fuente de datos</h3>
         <FileUpload name="file" :customUpload="true" @uploader="uploader" chooseLabel="Elegir" uploadLabel="Subir"
           cancelLabel="Cancelar">
           <template #empty>
@@ -77,10 +77,6 @@
   import {
     defineComponent
   } from '@vue/runtime-core';
-
-  function file_extension(filename) {
-    return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
-  }
 
   export default defineComponent({
     name: 'AprioriView',

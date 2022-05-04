@@ -22,6 +22,21 @@ const routes = [
     name: 'p-clust',
     component: () => import('../views/PClustView.vue')
   },
+  {
+    path: '/regression',
+    name: 'regression',
+    component: () => import('../views/RegressionView.vue')
+  },
+  {
+    path: '/a-prediction',
+    name: 'a-prediction',
+    component: () => import('../views/APredictionView.vue')
+  },
+  {
+    path: '/a-classification',
+    name: 'a-classification',
+    component: () => import('../views/AClassificationView.vue')
+  },
 ]
 
 const router = createRouter({

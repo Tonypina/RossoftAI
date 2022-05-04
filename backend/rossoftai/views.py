@@ -35,7 +35,7 @@ class AlgorithmView(APIView):
 
         with default_storage.open('rossoftai/data/_'+data.name, mode='w') as fp:
             for number, line in enumerate(lines):
-                if number not in [0, 1, 2, 3]:
+                if number not in [0, 1, 2, 3, len(lines)-1]:
                     fp.write(line)
 
         serializer = DataSerializer(data=request.data)
@@ -49,8 +49,6 @@ class AlgorithmView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-
-        print(request.query_params)
 
         algthm = Algorithms( default_storage.open('rossoftai/data/'+request.query_params.get('name'), mode='rb') )
         
@@ -82,5 +80,11 @@ class AlgorithmView(APIView):
 
             return Response(
                 algthm.h_clust(),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'get_data' ):
+
+            return Response(
+                algthm.get_data(),
                 status=status.HTTP_200_OK
             )

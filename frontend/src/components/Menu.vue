@@ -1,12 +1,12 @@
 <template>
-  <aside class="p-0 col-2 surface-900 h-screen fixed z-1">
+  <aside class="p-0 col-3 surface-900 h-screen fixed z-1">
     <div id="marca" class="p-2 h-4rem surface-800">
       <div class="img-container">
         <img src="icon.png" alt="Icono">
       </div>
       <h1>Rossoft<span>AI</span></h1>
     </div>
-    <ul class="px-4">
+    <ul class="px-6">
       <router-link to="/">
         <li>
           Reglas de asociación
@@ -36,6 +36,36 @@
                 <li>
                   <i class="pi pi-share-alt mr-2"></i>
                   Particional
+                </li>
+              </router-link>
+            </ul>
+          </AccordionTab>
+        </Accordion>
+      </li>
+      <router-link to="/regression">
+        <li>
+          <i class="pi pi-chart-line mr-2"></i>
+          Regresión Logística
+        </li>
+      </router-link>
+      <li class="p-0">
+        <Accordion class="menu-accordion">
+          <AccordionTab>
+            <template #header>
+              <i class="pi pi-sitemap mr-2"></i>
+              Árboles de desición
+            </template>
+            <ul class="p-0">
+              <router-link to="/a-prediction">
+                <li>
+                  <i class="pi pi-share-alt mr-2"></i>
+                  Pronóstico
+                </li>
+              </router-link>
+              <router-link to="/a-classification">
+                <li>
+                  <i class="pi pi-share-alt mr-2"></i>
+                  Clasificación
                 </li>
               </router-link>
             </ul>
@@ -135,6 +165,16 @@
           box-shadow: none !important;
         }
       }
+    }
+
+    .p-accordion-header-link {
+      background: var(--surface-900) !important;
+      color: white !important;
+    }
+
+    .p-accordion-header .p-highlight {
+      background-color: var(--surface-900) !important;
+
     }
 
     .p-accordion-content {

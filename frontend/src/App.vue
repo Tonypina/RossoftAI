@@ -1,10 +1,10 @@
 <template>
   <div class="grid surface-200">
     <Menu/>
-    <div class="p-0 col-10 col-offset-2 fixed z-5">
+    <div class="p-0 col-9 col-offset-3 fixed z-5">
       <Nav/>
     </div>
-    <div class="p-0 col-10 col-offset-2 mt-7 z-1">
+    <div class="p-0 col-9 col-offset-3 mt-7 z-1">
       <router-view/>
     </div> 
   </div>
@@ -14,7 +14,6 @@
 @import "~primeflex/primeflex.css";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Exo:wght@100&display=swap');
-
 
 #app {
   // font-family: Avenir, Helvetica, Arial, sans-serif;

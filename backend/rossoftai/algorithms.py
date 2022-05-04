@@ -9,10 +9,19 @@ from apyori import apriori
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.cluster import AgglomerativeClustering
 
+from django.core.files.storage import default_storage
+
+import matplotlib.pyplot as plt
+# %matplotlib inline
+
 class Algorithms:
 
     def __init__( self, dataFile ):
-        self.__data = pd.read_csv( dataFile, header=None )    
+        # self.__data = pd.read_csv( dataFile, header=None )    
+        self.__data = pd.read_csv( dataFile )    
+
+    def get_data( self ):
+        return pd.DataFrame( self.__data ).to_json(orient='records')
 
     def apriori_freq_dist( self ):
 
@@ -56,6 +65,10 @@ class Algorithms:
 
         CorrData = self.__data.corr(method='pearson')
         MatrizInf = np.triu(CorrData)
+
+        # plt.figure(figsize=(14,7))
+        # sns.heatmap(CorrData, cmap='RdBu_r', annot=True, mask=MatrizInf)
+        # plt.savefig('media/rossoftai/data/correlation_heatmap.png')
 
         return (CorrData, MatrizInf)
 
