@@ -5,7 +5,7 @@
       <FileTable v-model:dataName="this.data_name"/>
       <div class="pt-5" v-if="this.data_name">
         <h2>Selección de Características</h2>
-        <CaracSelec clustType="hclust" :dataName="this.data_name" v-model:centroides="this.centroides" v-model:dataClust="this.data_clust"/>
+        <CaracSelecClust clustType="hclust" :dataName="this.data_name" v-model:centroides="this.centroides" v-model:dataClust="this.data_clust"/>
         <div class="pt-5" v-if="this.centroides.length > 0">
           <h2>Clusters obtenidos</h2>
           <Centroides :centroides="this.centroides" :dataClust="this.data_clust"/>
@@ -17,7 +17,7 @@
 
 <script lang="js">
   import FileTable from '../components/FileTable'
-  import CaracSelec from '../components/CaracSelec'
+  import CaracSelecClust from '../components/CaracSelecClust'
   import Centroides from '../components/Centroides'
   // import Chart from 'primevue/chart';
 
@@ -28,7 +28,7 @@
 
     components: {
       FileTable,
-      CaracSelec,
+      CaracSelecClust,
       Centroides
     },
 

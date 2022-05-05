@@ -11,6 +11,20 @@
         <DataTable :value="datos" responsiveLayout="scroll" :scrollable="true" scrollHeight="400px">
             <Column v-for="col of columns_datos" :field="col.field" :header="col.header" :key="col.field"></Column>
         </DataTable>
+        <h2>Relación</h2>
+        <h3>Selecciona dos características</h3>
+        <div class="pt-2 pb-4">
+            <div class="pr-4 inline">
+                <Dropdown v-model="selectedCar1" :options="headersList" optionLabel="name"
+                    placeholder="Selecciona una característica" />
+            </div>
+            <div class="pr-4 inline">
+                <Dropdown v-model="selectedCar2" :options="headersList" optionLabel="name"
+                    placeholder="Selecciona una característica" />
+            </div>
+            <Button label="Graficar" @click="plot" />
+        </div>
+        <Chart type="line" :data="chartData" />
     </div>
 </template>
 <script>
@@ -18,8 +32,13 @@
     import Column from 'primevue/column';
     import Row from 'primevue/row';
     import FileUpload from 'primevue/fileupload'
+    import Chart from 'primevue/chart'
+    import Dropdown from 'primevue/dropdown';
+    import Button from 'primevue/button'
 
-    import { axiosInst } from '../axios-api'
+    import {
+        axiosInst
+    } from '../axios-api'
 
     export default {
         name: 'FileTable',
@@ -29,8 +48,9 @@
 
         mounted() {
             this.data_name,
-            this.datos = [],
-            this.columns_datos = []
+                this.datos = [],
+                this.columns_datos = [],
+                this.headersList = []
         },
 
         data() {
@@ -38,7 +58,21 @@
                 file: '',
                 data_name: null,
                 datos: null,
-                columns_datos: null
+                columns_datos: null,
+                selectedCar1: null,
+                selectedCar2: null,
+                headersList: null,
+
+                chartData: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Datos',
+                        data: [],
+                        fill: false,
+                        borderColor: '#42A5F5',
+                        tension: 0
+                    }]
+                }
             }
         },
 
@@ -47,9 +81,26 @@
             FileUpload,
             Column,
             Row,
+            Dropdown,
+            Chart,
+            Button
         },
 
         methods: {
+            plot() {
+
+                var labels = new Array()
+                var dataset = new Array()
+                this.datos.forEach(element => {
+                    labels[labels.length] = element[this.selectedCar1.name]
+                    dataset[dataset.length] = element[this.selectedCar2.name]
+                })
+
+                this.chartData.labels = labels
+                this.chartData.datasets[0].data = dataset
+
+            },
+
             uploader(event) {
 
                 var formData = new FormData();
@@ -78,7 +129,6 @@
                             var dataList = JSON.parse(response.data)
                             var headersList = Object.keys(dataList[0])
 
-
                             for (let i = 0; i < headersList.length; i++) {
                                 this.columns_datos[i] = {
                                     field: headersList[i],
@@ -86,6 +136,12 @@
                                 }
                             }
                             this.datos = dataList
+
+                            headersList.forEach(e => {
+                                this.headersList[this.headersList.length] = {
+                                    name: e
+                                }
+                            })
 
                         }).catch(function (error) {
                             console.log(error)

@@ -38,7 +38,6 @@ class Algorithms:
         List = List.rename(columns={0 : 'Item'})
 
         return List.to_json(orient='records')
-        # return List
     
     def apriori_algorithm( self, support, confidence, lift ):
 

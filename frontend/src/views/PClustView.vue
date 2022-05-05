@@ -5,7 +5,7 @@
       <FileTable v-model:dataName="this.data_name" />
       <div class="pt-5" v-if="this.data_name">
         <h2>Selección de Características</h2>
-        <CaracSelec clustType="kmeans" :dataName="this.data_name" v-model:sse="this.lineChartData.datasets[0].data"
+        <CaracSelecClust clustType="kmeans" :dataName="this.data_name" v-model:sse="this.lineChartData.datasets[0].data"
           v-model:elbow="this.elbow" v-model:carac="this.selectedCarac" />
         <div v-if="this.lineChartData.datasets[0].data.length">
           <h2>Método del codo</h2>
@@ -28,6 +28,7 @@
           </div>
         </div>
         <div class="pt-5" v-if="this.centroides.length > 0">
+          <h2>Clusters obtenidos</h2>
           <Centroides :centroides="this.centroides" :dataClust="this.data_clust"/>
         </div>
       </div>
@@ -37,7 +38,7 @@
 
 <script lang="js">
   import FileTable from '../components/FileTable'
-  import CaracSelec from '../components/CaracSelec'
+  import CaracSelecClust from '../components/CaracSelecClust'
   import Centroides from '../components/Centroides'
   import Chart from 'primevue/chart'
   import InputText from 'primevue/inputtext'
@@ -54,7 +55,7 @@
 
     components: {
       FileTable,
-      CaracSelec,
+      CaracSelecClust,
       Centroides,
       Chart,
       InputText,
