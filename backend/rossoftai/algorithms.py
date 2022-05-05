@@ -1,5 +1,4 @@
-from cmath import isnan
-from ctypes.wintypes import COLORREF
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -9,11 +8,11 @@ from scipy.spatial.distance import cdist
 from apyori import apriori
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import KMeans
+from sklearn.metrics import pairwise_distances_argmin_min
+from kneed import KneeLocator
 
 from django.core.files.storage import default_storage
-
-import matplotlib.pyplot as plt
-# %matplotlib inline
 
 class Algorithms:
 
@@ -108,3 +107,29 @@ class Algorithms:
         CentroidesH = self.__data.groupby('cluster').mean()
 
         return (self.__data.to_json(orient='records'), CentroidesH.to_json(orient='records'))
+    
+    def k_means( self, carac ):
+        MEstandarizada = self.__scaler(carac)
+
+        SSE = []
+        for i in range(2, 12):
+            km = KMeans(n_clusters=i, random_state=0)
+            km.fit(MEstandarizada)
+            SSE.append(km.inertia_)
+
+        kl = KneeLocator(range(2,12), SSE, curve="convex", direction="decreasing")
+
+        return (SSE, kl.elbow)
+
+    def p_clust( self, nClust, carac ):
+
+        MEstandarizada = self.__scaler(carac)
+
+        MParticional = KMeans(n_clusters=nClust, random_state=0).fit(MEstandarizada)
+        MParticional.predict(MEstandarizada)
+
+        self.__data['cluster'] = MParticional.labels_
+
+        CentroidesP = self.__data.groupby('cluster').mean()
+
+        return (self.__data.to_json(orient='records'), CentroidesP.to_json(orient='records'))

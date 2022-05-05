@@ -101,6 +101,23 @@ class AlgorithmView(APIView):
                 ),
                 status=status.HTTP_200_OK
             )
+        elif ( algthm_type == 'kmeans' ):
+
+            return Response(
+                algthm.k_means(
+                    json.loads(request.query_params.get('carac'))
+                ),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'pclust' ):
+
+            return Response(
+                algthm.p_clust(
+                    int(request.query_params.get('nClust')),
+                    json.loads(request.query_params.get('carac'))
+                ),
+                status=status.HTTP_200_OK
+            )
         elif ( algthm_type == 'get_data' ):
 
             return Response(

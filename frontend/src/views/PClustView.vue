@@ -1,112 +1,114 @@
 <template>
-  <div class="p-clust pt-5">
+  <div class="apriori pt-5">
     <h1>Módulo de Clustering Particional</h1>
     <div class="px-7 pt-5 pb-5">
-      <h3>Suba la fuente de datos que usará</h3>
-      <FileUpload name="file" :customUpload="true" @uploader="uploader" chooseLabel="Elegir" uploadLabel="Subir"
-        cancelLabel="Cancelar">
-        <template #empty>
-          <p>Suelte su archivo aquí</p>
-        </template>
-      </FileUpload>
+      <FileTable v-model:dataName="this.data_name" />
+      <div class="pt-5" v-if="this.data_name">
+        <h2>Selección de Características</h2>
+        <CaracSelec clustType="kmeans" :dataName="this.data_name" v-model:sse="this.lineChartData.datasets[0].data"
+          v-model:elbow="this.elbow" v-model:carac="this.selectedCarac" />
+        <div v-if="this.lineChartData.datasets[0].data.length">
+          <h2>Método del codo</h2>
+          <div class="grid">
+            <div class="col-8">
+              <Chart type="line" :data="lineChartData" />
+            </div>
+            <div class="col-4">
+              <h3>Inserte el número de clusters que utilizará</h3>
+              <h4>Recomendación: {{this.elbow}}</h4>
+              <div class="grid">
+                <div class=col-10>
+                  <InputText id="nClust" placeholder="Número de Clusters" v-model="this.nClust" />
+                </div>
+                <div class="col-2">
+                  <Button icon="pi pi-check" iconPos="right" @click="sendNumClust" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pt-5" v-if="this.centroides.length > 0">
+          <Centroides :centroides="this.centroides" :dataClust="this.data_clust"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="js">
-  import FileUpload from 'primevue/fileupload';
-  import Chart from 'primevue/chart';
-
-  import DataTable from 'primevue/datatable';
-  import Column from 'primevue/column';
-  import Row from 'primevue/row';
-  import InputText from 'primevue/inputtext';
-  import Button from 'primevue/button';
-  import MultiSelect from 'primevue/multiselect';
-
-  import Functions from '../functions.js'
+  import FileTable from '../components/FileTable'
+  import CaracSelec from '../components/CaracSelec'
+  import Centroides from '../components/Centroides'
+  import Chart from 'primevue/chart'
+  import InputText from 'primevue/inputtext'
+  import Button from 'primevue/button'
 
   import {
-    axiosInst
-  } from '../axios-api'
+    defineComponent
+  } from '@vue/runtime-core';
 
-  function getPointCategoryName(point, dimension) {
-    var series = point.series,
-      isY = dimension === 'y',
-      axis = series[isY ? 'yAxis' : 'xAxis'];
-    return axis.categories[point[isY ? 'y' : 'x']];
-  }
+  import {axiosInst} from '../axios-api'
 
-  function round(num) {
-    var m = Number((Math.abs(num) * 100).toPrecision(15));
-    return Math.round(m) / 100 * Math.sign(num);
-  }
-
-  export default {
+  export default defineComponent({
     name: 'PClustView',
+
+    components: {
+      FileTable,
+      CaracSelec,
+      Centroides,
+      Chart,
+      InputText,
+      Button
+    },
+
+    created() {
+      this.centroides = [],
+        this.data_clust = [],
+        this.elbow,
+        this.nClust,
+        this.selectedCarac = []
+    },
 
     data() {
       return {
         data_name: null,
-        datos: [],
-        columns_datos: []
-      }
-    },
+        centroides: null,
+        data_clust: null,
+        elbow: null,
+        nClust: null,
+        selectedCarac: null,
 
-    components: {
-      FileUpload,
-      chart: Highcharts,
-      DataTable,
-      Column,
-      Row,
-      InputText,
-      Button,
-      MultiSelect
+        lineChartData: {
+          labels: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+          datasets: [{
+            label: 'SSE',
+            data: [],
+            fill: false,
+            borderColor: '#42A5F5',
+            tension: 0
+          }]
+        }
+      }
     },
 
     methods: {
-      
-      uploader(event) {
-        var formData = new FormData();
-        formData.append("file", event.files[0])
 
-        axiosInst.post('/rossoftai/runAlgorithm/',
-            formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'Content-Disposition': 'attachment; filename=' + event.files[0].name
-              }
-            })
-          .then(response => {
-            this.data_name = response.data
+      sendNumClust() {
+        
+        axiosInst.get('/rossoftai/runAlgorithm/', {
+          params: {
+            name: this.data_name,
+            algthm_type: 'pclust',
+            nClust: this.nClust,
+            carac: JSON.stringify(this.selectedCarac)
+          }
+        }).then(res => {
 
-            axiosInst.get('/rossoftai/runAlgorithm/', {
-              params: {
-                algthm_type: "get_data",
-                name: this.data_name,
-              }
-            }).then(response => {
+          this.data_clust = JSON.parse(res.data[0])
+          this.centroides = JSON.parse(res.data[1])
 
-              var dataList = JSON.parse(response.data)
-              var headersList = Object.keys(dataList[0])
-
-
-              for (let i = 0; i < headersList.length; i++) {
-                this.columns_datos[i] = {
-                  field: headersList[i],
-                  header: headersList[i]
-                }
-              }
-              this.datos = dataList
-
-            }).catch(function (error) {
-              console.log(error)
-            })
-          })
-          .catch(function (error) {
-            console.log(error)
-          });
+        }).catch(err => console.log(err))
       }
     }
-  }
+  })
 </script>
