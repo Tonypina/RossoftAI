@@ -17,9 +17,12 @@ import matplotlib.pyplot as plt
 
 class Algorithms:
 
-    def __init__( self, dataFile ):
-        # self.__data = pd.read_csv( dataFile, header=None )    
-        self.__data = pd.read_csv( dataFile )    
+    def __init__( self, dataFile, algthm_type ):
+
+        if algthm_type == 'apriori':
+            self.__data = pd.read_csv( dataFile, header=None )    
+        else:
+            self.__data = pd.read_csv( dataFile )    
 
     def get_data( self ):
         return pd.DataFrame( self.__data ).to_json(orient='records')

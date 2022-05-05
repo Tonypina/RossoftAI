@@ -50,7 +50,7 @@ class AlgorithmView(APIView):
 
     def get(self, request):
 
-        algthm = Algorithms( default_storage.open('rossoftai/data/'+request.query_params.get('name'), mode='rb') )
+        algthm = Algorithms( default_storage.open('rossoftai/data/'+request.query_params.get('name'), mode='rb'), request.query_params.get('algthm_type') )
         
         algthm_type = request.query_params.get('algthm_type')
         if ( algthm_type == 'apriori' ):
