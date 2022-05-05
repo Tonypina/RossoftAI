@@ -11,6 +11,8 @@ from .serializers import DataSerializer, ReportSerializer
 
 from .algorithms import Algorithms
 
+import json
+
 class ReportListView(APIView):
     def get(self, request, *args, **kwargs):
         reports = Report.reportobjects.all()
@@ -93,7 +95,10 @@ class AlgorithmView(APIView):
         elif ( algthm_type == 'hclust' ):
 
             return Response(
-                algthm.h_clust(),
+                algthm.h_clust(
+                    int(request.query_params.get('nClust')),
+                    json.loads(request.query_params.get('carac'))
+                ),
                 status=status.HTTP_200_OK
             )
         elif ( algthm_type == 'get_data' ):

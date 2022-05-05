@@ -88,7 +88,7 @@ class Algorithms:
 
         return (CorrData, MatrizInf)
 
-    def scaler( self, carac ):
+    def __scaler( self, carac ):
         Matriz = np.array(self.__data[carac])
 
         estandarizar = StandardScaler()
@@ -96,13 +96,15 @@ class Algorithms:
         
         return MEstandarizada
 
-    def h_clust( self, nClust, MEstandarizada ):
+    def h_clust( self, nClust, carac ):
+
+        MEstandarizada = self.__scaler(carac)
 
         MJerarquico = AgglomerativeClustering(n_clusters=nClust, linkage='complete', affinity='euclidean')
         MJerarquico.fit_predict(MEstandarizada)
 
-        self.__data['clusterH'] = MJerarquico.labels_
+        self.__data['cluster'] = MJerarquico.labels_
 
-        CentroidesH = self.__data.groupby('clusterH').mean()
+        CentroidesH = self.__data.groupby('cluster').mean()
 
-        return CentroidesH
+        return (self.__data.to_json(orient='records'), CentroidesH.to_json(orient='records'))

@@ -12,7 +12,7 @@
     <DataTable :value="datos" responsiveLayout="scroll" :scrollable="true" scrollHeight="400px">
       <Column v-for="col of columns_datos" :field="col.field" :header="col.header" :key="col.field"></Column>
     </DataTable>
-    <div class="pt-7">
+    <div class="pt-7" v-if="this.data_name">
       <TabView>
         <TabPanel header="Matriz de Distancias">
           <div class="pt-2">
