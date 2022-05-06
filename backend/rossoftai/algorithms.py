@@ -9,8 +9,10 @@ from apyori import apriori
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin_min
+from sklearn.metrics import pairwise_distances_argmin_min, classification_report, confusion_matrix, accuracy_score
 from kneed import KneeLocator
+from sklearn import linear_model, model_selection
+
 
 from django.core.files.storage import default_storage
 
@@ -84,7 +86,7 @@ class Algorithms:
         CorrData = self.__data.corr(method='pearson')
         MatrizInf = np.triu(CorrData)
 
-        return (CorrData, MatrizInf)
+        return (CorrData, MatrizInf, list(self.__data.columns.values) )
 
     def __scaler( self, carac ):
         Matriz = np.array(self.__data[carac])
@@ -132,3 +134,35 @@ class Algorithms:
         CentroidesP = self.__data.groupby('cluster').mean()
 
         return (self.__data.to_json(orient='records'), CentroidesP.to_json(orient='records'))
+
+    def regression( self, clase, predictoras ):
+        muestra = self.__data.at[0, clase]
+
+        if ( isinstance(muestra, str) ):
+            GroupByData = self.__data.groupby(clase)
+            tempdict = {}
+
+            for i, key in enumerate(GroupByData.indices.keys()):
+                tempdict[key] = i
+        
+            self.__data = self.__data.replace(tempdict)
+        
+        X = np.array(self.__data[predictoras])
+        Y = np.array(self.__data[[clase]])
+
+        X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X, Y, test_size=0.2, random_state=1234, shuffle=True)
+        Clasificacion = linear_model.LogisticRegression()
+        Clasificacion.fit(X_train, Y_train)
+        
+        Y_Clasificacion = Clasificacion.predict(X_validation)
+
+        Probabilidad = Clasificacion.predict_proba(X_validation)
+        Score = Clasificacion.score(X_validation, Y_validation)
+        Matriz_Clasificacion = pd.crosstab(Y_validation.ravel(), Y_Clasificacion, rownames=['Real'], colnames=['Clasificación'])
+        Reporte = classification_report(Y_validation, Y_Clasificacion)
+        Intercepto = Clasificacion.intercept_
+        Coeficientes = Clasificacion.coef_
+
+        # TODO Falta regresar los valores y hacer otra función de predicciones
+
+        return self.__data.to_json()

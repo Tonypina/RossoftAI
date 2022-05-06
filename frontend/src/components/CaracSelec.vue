@@ -8,10 +8,10 @@
             <MultiSelect v-model="selectedCaracteristics" :options="caracteristics" optionLabel="caracteristic"
                 placeholder="Seleccione las características" display="chip" />
             <div class="pt-6" v-if="this.selectedCaracteristics.length">
-                <Button label="Calcular clusters" @click="sendCaracteristics" />
+                <Button label="Confirmar" @click="sendCaracteristics" />
             </div>
             <div class="pt-6" v-if="!this.selectedCaracteristics.length">
-                <Button label="Calcular clusters" disabled="disabled" />
+                <Button label="Confirmar" disabled="disabled" />
             </div>
         </div>
     </div>
@@ -65,7 +65,8 @@
                     name: this.dataName
                 }
             }).then(response => {
-                var headersList = Object.keys(response.data[0])
+                // var headersList = Object.keys(response.data[0])
+                var headersList = response.data[2]
 
                 headersList.forEach(e => {
                     this.caracteristics[this.caracteristics.length] = {

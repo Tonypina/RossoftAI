@@ -124,3 +124,12 @@ class AlgorithmView(APIView):
                 algthm.get_data(),
                 status=status.HTTP_200_OK
             )
+        elif ( algthm_type == 'regression' ):
+
+            return Response(
+                algthm.regression(
+                    request.query_params.get('clase'),
+                    json.loads(request.query_params.get('predictoras'))
+                ),
+                status=status.HTTP_200_OK
+            )
