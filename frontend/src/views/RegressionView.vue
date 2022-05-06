@@ -20,6 +20,10 @@
               <Button label="Confirmar" @click="confirm" />
             </div>
           </div>
+          <div v-if="this.coef.length > 0">
+            <h2>Validación del modelo</h2>
+            <Validacion :score="this.score" :intercept="this.intercept" :coef="this.coef" :matrix="this.matrix" />
+          </div>
         </div>
       </div>
     </div>
@@ -31,7 +35,7 @@
   import CaracSelec from '../components/CaracSelec'
   import VarSelec from '../components/VarSelec'
   import Button from 'primevue/button'
-  // import Chart from 'primevue/chart';
+  import Validacion from '../components/Validacion'
 
   import {
     defineComponent
@@ -46,7 +50,8 @@
       FileTable,
       CaracSelec,
       VarSelec,
-      Button
+      Button,
+      Validacion
     },
 
     created() {
@@ -58,7 +63,11 @@
       return {
         data_name: null,
         selectedCaracteristics: null,
-        clase: null
+        clase: null,
+        score: null,
+        intercept: null,
+        coef: [],
+        matrix: []
       }
     },
 
@@ -81,7 +90,12 @@
             predictoras: JSON.stringify(predictoras)
           }
         }).then(res => {
-          // console.log(res.data)
+
+          this.score = res.data[0]
+          this.intercept = res.data[1]
+          this.coef = res.data[2]
+          this.matrix = JSON.parse(res.data[3])
+
         }).catch(err => console.log(err))
       }
     }

@@ -163,6 +163,4 @@ class Algorithms:
         Intercepto = Clasificacion.intercept_
         Coeficientes = Clasificacion.coef_
 
-        # TODO Falta regresar los valores y hacer otra función de predicciones
-
-        return self.__data.to_json()
+        return (Score, Intercepto, Coeficientes, Matriz_Clasificacion.to_json(orient='records'))
