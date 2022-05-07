@@ -20,7 +20,7 @@
               <Button label="Confirmar" @click="confirm" />
             </div>
           </div>
-          <div v-if="this.coef.length > 0">
+          <div class="pt-5" v-if="this.coef.length > 0">
             <h2>Validación del modelo</h2>
             <Validacion :score="this.score" :intercept="this.intercept" :coef="this.coef" :matrix="this.matrix" />
           </div>
@@ -56,7 +56,8 @@
 
     created() {
       this.selectedCaracteristics = []
-      this.clase
+      this.clase,
+      this.coef = []
     },
 
     data() {
@@ -66,7 +67,7 @@
         clase: null,
         score: null,
         intercept: null,
-        coef: [],
+        coef: null,
         matrix: []
       }
     },
