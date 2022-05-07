@@ -99,7 +99,7 @@
 
   import {
     axiosInst
-  } from '../axios-api';
+  } from '../../axios-api';
 
   export default {
     name: 'MetricsView',

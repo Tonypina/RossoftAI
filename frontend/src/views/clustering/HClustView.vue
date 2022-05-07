@@ -16,10 +16,9 @@
 </template>
 
 <script lang="js">
-  import FileTable from '../components/FileTable'
-  import CaracSelecClust from '../components/CaracSelecClust'
-  import Centroides from '../components/Centroides'
-  // import Chart from 'primevue/chart';
+  import FileTable from '../../components/FileTable'
+  import CaracSelecClust from '../../components/CaracSelecClust'
+  import Centroides from '../../components/Centroides'
 
   import { defineComponent } from '@vue/runtime-core';
 

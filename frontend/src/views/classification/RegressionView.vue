@@ -31,17 +31,17 @@
 </template>
 
 <script lang="js">
-  import FileTable from '../components/FileTable'
-  import CaracSelec from '../components/CaracSelec'
-  import VarSelec from '../components/VarSelec'
+  import FileTable from '../../components/FileTable'
+  import CaracSelec from '../../components/CaracSelec'
+  import VarSelec from '../../components/VarSelec'
   import Button from 'primevue/button'
-  import Validacion from '../components/Validacion'
+  import Validacion from '../../components/Validacion'
 
   import {
     defineComponent
   } from '@vue/runtime-core';
 
-  import {axiosInst} from '../axios-api'
+  import {axiosInst} from '../../axios-api'
 
   export default defineComponent({
     name: 'RegressionView',

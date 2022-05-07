@@ -42,30 +42,54 @@
           </AccordionTab>
         </Accordion>
       </li>
-      <router-link to="/regression">
-        <li>
-          <i class="pi pi-chart-line mr-2"></i>
-          Regresión Logística
-        </li>
-      </router-link>
       <li class="p-0">
         <Accordion class="menu-accordion">
           <AccordionTab>
             <template #header>
               <i class="pi pi-sitemap mr-2"></i>
-              Árboles de desición
+              Pronóstico
             </template>
             <ul class="p-0">
               <router-link to="/a-prediction">
                 <li>
                   <i class="pi pi-share-alt mr-2"></i>
-                  Pronóstico
+                  Árboles de decisión
+                </li>
+              </router-link>
+              <router-link to="/b-prediction">
+                <li>
+                  <i class="pi pi-share-alt mr-2"></i>
+                  Bosques Aleatorios
+                </li>
+              </router-link>
+            </ul>
+          </AccordionTab>
+        </Accordion>
+      </li>
+      <li class="p-0">
+        <Accordion class="menu-accordion">
+          <AccordionTab>
+            <template #header>
+              <i class="pi pi-sitemap mr-2"></i>
+              Clasificación
+            </template>
+            <ul class="p-0">
+              <router-link to="/regression">
+                <li>
+                  <i class="pi pi-share-alt mr-2"></i>
+                  Regresión Logística
                 </li>
               </router-link>
               <router-link to="/a-classification">
                 <li>
                   <i class="pi pi-share-alt mr-2"></i>
-                  Clasificación
+                  Árboles de decisión
+                </li>
+              </router-link>
+              <router-link to="/b-classification">
+                <li>
+                  <i class="pi pi-share-alt mr-2"></i>
+                  Bosques Aleatorios
                 </li>
               </router-link>
             </ul>

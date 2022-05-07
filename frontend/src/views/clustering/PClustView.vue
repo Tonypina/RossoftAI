@@ -37,9 +37,9 @@
 </template>
 
 <script lang="js">
-  import FileTable from '../components/FileTable'
-  import CaracSelecClust from '../components/CaracSelecClust'
-  import Centroides from '../components/Centroides'
+  import FileTable from '../../components/FileTable'
+  import CaracSelecClust from '../../components/CaracSelecClust'
+  import Centroides from '../../components/Centroides'
   import Chart from 'primevue/chart'
   import InputText from 'primevue/inputtext'
   import Button from 'primevue/button'
@@ -48,7 +48,7 @@
     defineComponent
   } from '@vue/runtime-core';
 
-  import {axiosInst} from '../axios-api'
+  import {axiosInst} from '../../axios-api'
 
   export default defineComponent({
     name: 'PClustView',

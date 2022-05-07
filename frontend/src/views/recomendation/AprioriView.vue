@@ -73,7 +73,7 @@
 
   import {
     axiosInst
-  } from '../axios-api'
+  } from '../../axios-api'
   import {
     defineComponent
   } from '@vue/runtime-core';
