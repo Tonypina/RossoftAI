@@ -20,9 +20,11 @@
               <Button label="Confirmar" @click="confirm" />
             </div>
           </div>
-          <div class="pt-5" v-if="this.coef.length > 0">
-            <h2>Validación del modelo</h2>
-            <Validacion :score="this.score" :intercept="this.intercept" :coef="this.coef" :matrix="this.matrix" />
+          <div class="pt-5" v-if="this.coef.length > 0">|
+            <Validacion :score="this.score" :intercept="this.intercept" :coef="this.coef" :tempdict="this.tempdict" :matrix="this.matrix"/>
+            <div class="pt-5">
+              <Modelo :dataName="this.data_name" :intercept="this.intercept" :coef="this.coef" :tempdict="this.tempdict" :carac="this.predictoras" />
+            </div>
           </div>
         </div>
       </div>
@@ -36,6 +38,7 @@
   import VarSelec from '../../components/VarSelec'
   import Button from 'primevue/button'
   import Validacion from '../../components/Validacion'
+  import Modelo from '../../components/Modelo'
 
   import {
     defineComponent
@@ -51,13 +54,15 @@
       CaracSelec,
       VarSelec,
       Button,
-      Validacion
+      Validacion,
+      Modelo
     },
 
     created() {
       this.selectedCaracteristics = []
       this.clase,
-      this.coef = []
+      this.coef = [],
+      this.predictoras = []
     },
 
     data() {
@@ -68,7 +73,9 @@
         score: null,
         intercept: null,
         coef: null,
-        matrix: []
+        matrix: [],
+        predictoras: null,
+        tempdict: null
       }
     },
 
@@ -82,6 +89,8 @@
             predictoras[predictoras.length] = e
           }
         })
+
+        this.predictoras = predictoras
         
         axiosInst.get('/rossoftai/runAlgorithm/', {
           params: {
@@ -96,6 +105,9 @@
           this.intercept = res.data[1]
           this.coef = res.data[2]
           this.matrix = JSON.parse(res.data[3])
+          this.tempdict = res.data[4]
+
+          console.log(res.data[4]);
 
         }).catch(err => console.log(err))
       }

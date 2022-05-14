@@ -198,6 +198,7 @@
 
     .p-accordion-header .p-highlight {
       background-color: var(--surface-900) !important;
+      color: #F56800 !important;
 
     }
 

@@ -1,3 +1,5 @@
+from ast import Delete
+import os
 from statistics import mode
 from rest_framework import status
 from rest_framework.views import APIView
@@ -45,9 +47,13 @@ class AlgorithmView(APIView):
 
             serializer.save()
             
+            default_storage.delete('rossoftai/data/'+data.name)
+
             return Response(
                 '_'+data.name,
                 status=status.HTTP_201_CREATED)
+        
+        default_storage.delete('rossoftai/data/'+data.name)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
@@ -130,6 +136,16 @@ class AlgorithmView(APIView):
                 algthm.regression(
                     request.query_params.get('clase'),
                     json.loads(request.query_params.get('predictoras'))
+                ),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'predict' ):
+
+            return Response(
+                algthm.predict(
+                    float(request.query_params.get('intercept')),
+                    json.loads(request.query_params.get('coef')),
+                    json.loads(request.query_params.get('values'))
                 ),
                 status=status.HTTP_200_OK
             )

@@ -1,4 +1,5 @@
-
+from collections import defaultdict
+import math
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -163,4 +164,19 @@ class Algorithms:
         Intercepto = Clasificacion.intercept_
         Coeficientes = Clasificacion.coef_
 
-        return (Score, Intercepto, Coeficientes, Matriz_Clasificacion.to_json(orient='records'))
+        tempdict = {v: k for k, v in tempdict.items()}
+
+        return (Score, Intercepto, Coeficientes, Matriz_Clasificacion.to_json(orient='records'), tempdict)
+
+    def predict( self, intercept, coef, values ):
+
+        linear = intercept
+
+        i = 0
+        while i < len(values):
+            linear = linear + (coef[0][i]*values[i])
+            i = i + 1
+            
+        Prob = 1 / ( 1 + math.exp( -(linear) ) )
+
+        return round(Prob)
