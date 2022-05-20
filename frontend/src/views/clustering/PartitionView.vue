@@ -51,7 +51,7 @@
   import {axiosInst} from '../../axios-api'
 
   export default defineComponent({
-    name: 'PClustView',
+    name: 'PartitionView',
 
     components: {
       FileTable,

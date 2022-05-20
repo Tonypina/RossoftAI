@@ -84,11 +84,14 @@
                         name: this.dataName,
                         algthm_type: 'predict',
                         values: JSON.stringify(arrayValues),
-                        intercept: this.intercept[0],
-                        coef: JSON.stringify(this.coef)
+                        predictoras: JSON.stringify(this.carac)
                     }
                 }).then(res => {
-                    this.result = this.tempdict[res.data]
+
+                    this.tempdict ?
+                        this.result = this.tempdict[res.data]:
+                        this.result = res.data[0]
+
                 }).catch(err => console.log(err))
             }
         }

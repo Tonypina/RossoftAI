@@ -14,12 +14,12 @@ const routes = [
   {
     path: '/h-clust',
     name: 'h-clust',
-    component: () => import('../views/clustering/HClustView.vue')
+    component: () => import('../views/clustering/HeriarchyView.vue')
   },
   {
     path: '/p-clust',
     name: 'p-clust',
-    component: () => import('../views/clustering/PClustView.vue')
+    component: () => import('../views/clustering/PartitionView.vue')
   },
   {
     path: '/regression',
@@ -29,12 +29,12 @@ const routes = [
   {
     path: '/a-prediction',
     name: 'a-prediction',
-    component: () => import('../views/prediction/APredictionView.vue')
+    component: () => import('../views/prediction/TreeView.vue')
   },
   {
     path: '/a-classification',
     name: 'a-classification',
-    component: () => import('../views/classification/AClassificationView.vue')
+    component: () => import('../views/classification/TreeView.vue')
   },
 ]
 

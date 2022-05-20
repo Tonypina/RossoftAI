@@ -1,6 +1,7 @@
-from ast import Delete
 import os
 from statistics import mode
+from urllib import response
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -139,13 +140,30 @@ class AlgorithmView(APIView):
                 ),
                 status=status.HTTP_200_OK
             )
+        elif ( algthm_type == 'tree_classifier' ):
+
+            return Response(
+                algthm.tree_classifier(
+                    request.query_params.get('clase'),
+                    json.loads(request.query_params.get('predictoras')),
+                    int(request.query_params.get('max_depth')),
+                    int(request.query_params.get('min_samples_split')),
+                    int(request.query_params.get('min_samples_leaf'))
+                ),
+                status=status.HTTP_200_OK
+            )
         elif ( algthm_type == 'predict' ):
 
             return Response(
                 algthm.predict(
-                    float(request.query_params.get('intercept')),
-                    json.loads(request.query_params.get('coef')),
+                    json.loads(request.query_params.get('predictoras')),
                     json.loads(request.query_params.get('values'))
                 ),
                 status=status.HTTP_200_OK
             )
+        elif ( algthm_type == 'get_tree' ):
+            
+            with default_storage.open('rossoftai/images/tree.png', mode='rb') as png:
+                response = HttpResponse(png.read(), content_type='image/png')
+                response['Content-Disposition'] = 'attachment; filename=tree.png'
+                return response

@@ -1,9 +1,15 @@
 from collections import defaultdict
+from io import StringIO
+import pickle
 import math
+from IPython.display import Image
+from xml.sax.handler import feature_namespaces
 import pandas as pd
+from rossoft.settings import MEDIA_ROOT
 import numpy as np
 import seaborn as sns
 import scipy.cluster.hierarchy as shc
+import graphviz
 from scipy.spatial import distance
 from scipy.spatial.distance import cdist
 from apyori import apriori
@@ -13,7 +19,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min, classification_report, confusion_matrix, accuracy_score
 from kneed import KneeLocator
 from sklearn import linear_model, model_selection
-
+from sklearn.tree import DecisionTreeClassifier, export_graphviz
+import pydotplus
 
 from django.core.files.storage import default_storage
 
@@ -25,6 +32,12 @@ class Algorithms:
             self.__data = pd.read_csv( dataFile, header=None )    
         else:
             self.__data = pd.read_csv( dataFile )    
+
+    def __save_model( self, model ):
+
+        with default_storage.open('rossoftai/models/model.pkl', mode='wb') as model_pkl:
+            pickle.dump(model, model_pkl)
+
 
     def get_data( self ):
         return pd.DataFrame( self.__data ).to_json(orient='records')
@@ -157,7 +170,6 @@ class Algorithms:
         
         Y_Clasificacion = Clasificacion.predict(X_validation)
 
-        Probabilidad = Clasificacion.predict_proba(X_validation)
         Score = Clasificacion.score(X_validation, Y_validation)
         Matriz_Clasificacion = pd.crosstab(Y_validation.ravel(), Y_Clasificacion, rownames=['Real'], colnames=['Clasificación'])
         Reporte = classification_report(Y_validation, Y_Clasificacion)
@@ -166,17 +178,52 @@ class Algorithms:
 
         tempdict = {v: k for k, v in tempdict.items()}
 
-        return (Score, Intercepto, Coeficientes, Matriz_Clasificacion.to_json(orient='records'), tempdict)
+        self.__save_model(Clasificacion)
 
-    def predict( self, intercept, coef, values ):
+        return (Score, Matriz_Clasificacion.to_json(orient='records'), Intercepto, Coeficientes, tempdict)
 
-        linear = intercept
+    def tree_classifier( self, clase, predictoras, max_depth, min_samples_split, min_samples_leaf ):
+        X = np.array(self.__data[predictoras])
+        Y = np.array(self.__data[[clase]])
 
-        i = 0
-        while i < len(values):
-            linear = linear + (coef[0][i]*values[i])
-            i = i + 1
+        X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X, Y, test_size=0.2, random_state=1234, shuffle=True)
+
+        Clasificacion = DecisionTreeClassifier(max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf)
+        Clasificacion.fit(X_train, Y_train)
+
+        Y_Clasificacion = Clasificacion.predict(X_validation)
+
+        Score = Clasificacion.score(X_validation, Y_validation)
+        Matriz_Clasificacion = pd.crosstab(Y_validation.ravel(), Y_Clasificacion, rownames=['Real'], colnames=['Clasificación'])
+
+        self.__save_model( Clasificacion )
+
+        self.__plot_tree( Clasificacion, predictoras, Y_Clasificacion )
+
+        return (Score, Matriz_Clasificacion.to_json(orient='records'))
+
+    def __plot_tree( self, model, predictoras, y_clas ):
+        dot_data = StringIO()
+        export_graphviz(model, out_file=dot_data, feature_names=predictoras, class_names=y_clas)
+
+        graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+
+        graph.write_png(MEDIA_ROOT+'/rossoftai/images/tree.png')
             
-        Prob = 1 / ( 1 + math.exp( -(linear) ) )
 
-        return round(Prob)
+    def predict( self, predictoras, values ):
+
+        with default_storage.open('rossoftai/models/model.pkl', mode='rb') as model_pkl:
+            model = pickle.load(model_pkl)
+
+        x = {}
+        i = 0
+
+        while i < len(predictoras):
+            x[predictoras[i]] = [values[i]]
+            i = i + 1
+
+        x_df = pd.DataFrame(x)
+        prediccion = model.predict(x_df)
+
+        return prediccion
