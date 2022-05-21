@@ -108,6 +108,18 @@ class AlgorithmView(APIView):
                 ),
                 status=status.HTTP_200_OK
             )
+        elif ( algthm_type == 'get_dendrogram' ):
+
+            algthm.plot_dendrogram(
+                json.loads(request.query_params.get('carac')),
+                request.query_params.get('metric')
+            )
+
+            with default_storage.open('rossoftai/images/dendrogram.png', mode='rb') as png:
+                response = HttpResponse(png.read(), content_type='image/png')
+                response['Content-Disposition'] = 'attachment; filename=tree.png'
+                return response
+
         elif ( algthm_type == 'kmeans' ):
 
             return Response(

@@ -1,29 +1,23 @@
-from ast import Param
 from collections import defaultdict
 from io import StringIO
 import pickle
-import math
-from random import random
-from IPython.display import Image
-from xml.sax.handler import feature_namespaces
 import pandas as pd
 from rossoft.settings import MEDIA_ROOT
 import numpy as np
-import seaborn as sns
-import scipy.cluster.hierarchy as shc
 import graphviz
+import scipy.cluster.hierarchy as shc
 from scipy.spatial import distance
 from scipy.spatial.distance import cdist
 from apyori import apriori
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import classification_report, mean_squared_error, mean_absolute_error, r2_score
 from kneed import KneeLocator
 from sklearn import linear_model, model_selection
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import pydotplus
+import matplotlib.pyplot as plt
 
 from django.core.files.storage import default_storage
 
@@ -119,6 +113,17 @@ class Algorithms:
         MEstandarizada = estandarizar.fit_transform(Matriz)
         
         return MEstandarizada
+
+    def plot_dendrogram( self, carac, metric ):
+
+        plt.figure(figsize=(10, 7))
+        plt.xlabel('Observaciones')
+        plt.ylabel('Distancia')
+        
+        Arbol = shc.dendrogram(shc.linkage(self.__scaler(carac), method='complete', metric=metric))
+        plt.savefig(MEDIA_ROOT+'/rossoftai/images/dendrogram.png',figsize=(10, 8), dpi=300)
+
+
 
     def h_clust( self, nClust, carac ):
 
