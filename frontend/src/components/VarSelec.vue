@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>
+        <div class="">
             <h3 class="inline pr-3">Seleccione la variable clase: </h3>
             <div class="inline pr-3">
                 <Dropdown v-model="selectedVariable" :options="variables" optionLabel="name"

@@ -1,7 +1,9 @@
+from ast import Param
 from collections import defaultdict
 from io import StringIO
 import pickle
 import math
+from random import random
 from IPython.display import Image
 from xml.sax.handler import feature_namespaces
 import pandas as pd
@@ -16,10 +18,10 @@ from apyori import apriori
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin_min, classification_report, confusion_matrix, accuracy_score
+from sklearn.metrics import classification_report, mean_squared_error, mean_absolute_error, r2_score
 from kneed import KneeLocator
 from sklearn import linear_model, model_selection
-from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz
 import pydotplus
 
 from django.core.files.storage import default_storage
@@ -38,6 +40,13 @@ class Algorithms:
         with default_storage.open('rossoftai/models/model.pkl', mode='wb') as model_pkl:
             pickle.dump(model, model_pkl)
 
+    def __plot_tree( self, model, predictoras, y_clas ):
+        dot_data = StringIO()
+        export_graphviz(model, out_file=dot_data, feature_names=predictoras, class_names=y_clas)
+
+        graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+
+        graph.write_png(MEDIA_ROOT+'/rossoftai/images/tree.png')
 
     def get_data( self ):
         return pd.DataFrame( self.__data ).to_json(orient='records')
@@ -202,15 +211,29 @@ class Algorithms:
 
         return (Score, Matriz_Clasificacion.to_json(orient='records'))
 
-    def __plot_tree( self, model, predictoras, y_clas ):
-        dot_data = StringIO()
-        export_graphviz(model, out_file=dot_data, feature_names=predictoras, class_names=y_clas)
+    def tree_regression( self, clase, predictoras, max_depth, min_samples_split, min_samples_leaf ):
+        X = np.array(self.__data[predictoras])
+        Y = np.array(self.__data[[clase]])
 
-        graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+        X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X, Y, test_size=0.2, random_state=1234, shuffle=True)
 
-        graph.write_png(MEDIA_ROOT+'/rossoftai/images/tree.png')
+        Pronostico = DecisionTreeRegressor(max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf, random_state=0, criterion='absolute_error')
+        Pronostico.fit(X_train, Y_train)
+
+        Y_Pronostico = Pronostico.predict(X_test)
+
+        Params = {}
+        Params['Score'] = r2_score(Y_test, Y_Pronostico)
+        Params['MAE'] = mean_absolute_error(Y_test, Y_Pronostico)
+        Params['MSE'] = mean_squared_error(Y_test, Y_Pronostico)
+        Params['RMSE'] = mean_squared_error(Y_test, Y_Pronostico, squared=False)
+
+        self.__save_model( Pronostico )
+
+        self.__plot_tree( Pronostico, predictoras, Y_Pronostico )
+
+        return (Y_test, Y_Pronostico, Params, Pronostico.feature_importances_)
             
-
     def predict( self, predictoras, values ):
 
         with default_storage.open('rossoftai/models/model.pkl', mode='rb') as model_pkl:

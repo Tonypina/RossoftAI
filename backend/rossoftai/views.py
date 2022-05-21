@@ -152,6 +152,18 @@ class AlgorithmView(APIView):
                 ),
                 status=status.HTTP_200_OK
             )
+        elif ( algthm_type == 'tree_regression' ):
+
+            return Response(
+                algthm.tree_regression(
+                    request.query_params.get('clase'),
+                    json.loads(request.query_params.get('predictoras')),
+                    int(request.query_params.get('max_depth')),
+                    int(request.query_params.get('min_samples_split')),
+                    int(request.query_params.get('min_samples_leaf'))
+                ),
+                status=status.HTTP_200_OK
+            )
         elif ( algthm_type == 'predict' ):
 
             return Response(
