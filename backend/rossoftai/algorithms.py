@@ -22,6 +22,7 @@ from sklearn.metrics import classification_report, mean_squared_error, mean_abso
 from kneed import KneeLocator
 from sklearn import linear_model, model_selection
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import pydotplus
 
 from django.core.files.storage import default_storage
@@ -210,7 +211,7 @@ class Algorithms:
         self.__plot_tree( Clasificacion, predictoras, Y_Clasificacion )
 
         return (Score, Matriz_Clasificacion.to_json(orient='records'))
-
+    
     def tree_regression( self, clase, predictoras, max_depth, min_samples_split, min_samples_leaf ):
         X = np.array(self.__data[predictoras])
         Y = np.array(self.__data[[clase]])
@@ -233,7 +234,51 @@ class Algorithms:
         self.__plot_tree( Pronostico, predictoras, Y_Pronostico )
 
         return (Y_test, Y_Pronostico, Params, Pronostico.feature_importances_)
-            
+    
+    def forest_regression( self, clase, predictoras, max_depth, min_samples_split, min_samples_leaf, estimators, estimator_viz ):
+        X = np.array(self.__data[predictoras])
+        Y = np.array(self.__data[[clase]])
+
+        X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X, Y, test_size=0.2, random_state=1234, shuffle=True)
+
+        Pronostico = RandomForestRegressor(n_estimators=estimators, max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf, random_state=0, criterion='absolute_error')
+        Pronostico.fit(X_train, Y_train)
+
+        Y_Pronostico = Pronostico.predict(X_test)
+
+        Params = {}
+        Params['Score'] = r2_score(Y_test, Y_Pronostico)
+        Params['MAE'] = mean_absolute_error(Y_test, Y_Pronostico)
+        Params['MSE'] = mean_squared_error(Y_test, Y_Pronostico)
+        Params['RMSE'] = mean_squared_error(Y_test, Y_Pronostico, squared=False)
+
+        self.__save_model( Pronostico )
+
+        self.__plot_tree( Pronostico.estimators_[estimator_viz], predictoras, Y_Pronostico )
+
+        return (Y_test, Y_Pronostico, Params, Pronostico.feature_importances_)
+
+    def forest_classifier( self, clase, predictoras, max_depth, min_samples_split, min_samples_leaf, estimators, estimator_viz ):
+        X = np.array(self.__data[predictoras])
+        Y = np.array(self.__data[[clase]])
+
+        X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X, Y, test_size=0.2, random_state=1234, shuffle=True)
+
+        Clasificacion = RandomForestClassifier(n_estimators=estimators, max_depth=max_depth, min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf, random_state=0)
+        Clasificacion.fit(X_train, Y_train)
+
+        Y_Clasificacion = Clasificacion.predict(X_validation)
+
+        Score = Clasificacion.score(X_validation, Y_validation)
+        Matriz_Clasificacion = pd.crosstab(Y_validation.ravel(), Y_Clasificacion, rownames=['Real'], colnames=['Clasificación'])
+
+        self.__save_model( Clasificacion )
+
+        self.__plot_tree( Clasificacion.estimators_[estimator_viz], predictoras, Y_Clasificacion )
+
+        return (Score, Matriz_Clasificacion.to_json(orient='records'))
+        
+
     def predict( self, predictoras, values ):
 
         with default_storage.open('rossoftai/models/model.pkl', mode='rb') as model_pkl:

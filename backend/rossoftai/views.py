@@ -152,6 +152,20 @@ class AlgorithmView(APIView):
                 ),
                 status=status.HTTP_200_OK
             )
+        elif ( algthm_type == 'forest_classifier' ):
+
+            return Response(
+                algthm.forest_classifier(
+                    request.query_params.get('clase'),
+                    json.loads(request.query_params.get('predictoras')),
+                    int(request.query_params.get('max_depth')),
+                    int(request.query_params.get('min_samples_split')),
+                    int(request.query_params.get('min_samples_leaf')),
+                    int(request.query_params.get('estimators')),
+                    int(request.query_params.get('estimator_viz'))
+                ),
+                status=status.HTTP_200_OK
+            )
         elif ( algthm_type == 'tree_regression' ):
 
             return Response(
@@ -161,6 +175,20 @@ class AlgorithmView(APIView):
                     int(request.query_params.get('max_depth')),
                     int(request.query_params.get('min_samples_split')),
                     int(request.query_params.get('min_samples_leaf'))
+                ),
+                status=status.HTTP_200_OK
+            )
+        elif ( algthm_type == 'forest_regression' ):
+
+            return Response(
+                algthm.forest_regression(
+                    request.query_params.get('clase'),
+                    json.loads(request.query_params.get('predictoras')),
+                    int(request.query_params.get('max_depth')),
+                    int(request.query_params.get('min_samples_split')),
+                    int(request.query_params.get('min_samples_leaf')),
+                    int(request.query_params.get('estimators')),
+                    int(request.query_params.get('estimator_viz'))
                 ),
                 status=status.HTTP_200_OK
             )

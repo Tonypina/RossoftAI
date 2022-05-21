@@ -36,6 +36,16 @@ const routes = [
     name: 'a-classification',
     component: () => import('../views/classification/TreeView.vue')
   },
+  {
+    path: '/b-classification',
+    name: 'b-classification',
+    component: () => import('../views/classification/ForestView.vue')
+  },
+  {
+    path: '/b-prediction',
+    name: 'b-prediction',
+    component: () => import('../views/prediction/ForestView.vue')
+  },
 ]
 
 const router = createRouter({
