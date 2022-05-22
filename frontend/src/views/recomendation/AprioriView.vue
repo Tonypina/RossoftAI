@@ -221,7 +221,7 @@
                 labels: labelsList,
                 datasets: [{
                   label: 'Fuente de datos',
-                  backgroundColor: '#42A5F5',
+                  backgroundColor: '#F56800',
                   data: frequencyList
                 }]
               }
@@ -237,3 +237,16 @@
     }
   });
 </script>
+
+<style lang="scss">
+
+  .p-button {
+    background-color: #F56800;
+    border: none;
+
+    &:hover {
+      background-color: #cd5702 !important;
+      border: none;
+    }
+  }
+</style>

@@ -107,7 +107,7 @@
                     colorAxis: {
                         min: 0,
                         minColor: '#FFFFFF',
-                        maxColor: Highcharts.getOptions().colors[0]
+                        maxColor: '#990000'
                     },
 
                     legend: {
@@ -122,7 +122,7 @@
                     tooltip: {
                         formatter: function () {
                         return '<b>' + getPointCategoryName(this.point, 'x') +
-                            this.point.value + '</b> items en <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
+                            this.point.value + '</b> objetos en <br><b>' + getPointCategoryName(this.point, 'y') + '</b>';
                         }
                     },
 

@@ -69,7 +69,7 @@
                         label: 'Datos',
                         data: [],
                         fill: false,
-                        borderColor: '#42A5F5',
+                        borderColor: '#F56800',
                         tension: 0
                     }]
                 }

@@ -110,7 +110,7 @@
             label: 'SSE',
             data: [],
             fill: false,
-            borderColor: '#42A5F5',
+            borderColor: '#000000',
             tension: 0
           }]
         }

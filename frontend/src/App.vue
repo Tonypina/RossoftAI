@@ -1,7 +1,7 @@
 <template>
   <div class="grid">
     <Menu/>
-    <div class="p-0 col-9 col-offset-3 fixed z-5">
+    <div class="p-0 col-9 col-offset-3 fixed top-0 z-5">
       <Nav/>
     </div>
     <div class="p-0 col-9 col-offset-3 mt-7 z-1">

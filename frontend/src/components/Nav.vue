@@ -1,30 +1,55 @@
 <template>
-  <nav class="h-4rem bg-white shadow-5 z-5">
-
+  <nav class="h-4rem z-5">
+    <ul class="h-full px-6 mt-0 flex justify-content-center align-items-center">
+      <router-link to="/">
+        <li class="inline">
+          <i class="pi pi-link mr-2"></i>
+          Inicio
+        </li>
+      </router-link>
+      <router-link to="/">
+        <li class="inline">
+          <i class="pi pi-link mr-2"></i>
+          Documentación
+        </li>
+      </router-link>
+    </ul>
   </nav>
 </template>
 
 <script>
-export default {
-  name: 'Nav',
-}
+  export default {
+    name: 'Nav',
+  }
 </script>
 
 <style lang="scss">
+  nav {
+    // padding: 30px;
 
-nav {
-  // padding: 30px;
-  box-shadow: 0px 5px 6px 0px rgba(194,194,194,0.53);
-  -webkit-box-shadow: 0px 5px 6px 0px rgba(194,194,194,0.53);
-  -moz-box-shadow: 0px 5px 6px 0px rgba(194,194,194,0.53);
+    border-bottom: #F56800 solid 2px;
+    background-color: black;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    li {
+      list-style-type: none;
+      width: 100%;
+      padding: 1.175rem;
+      border-radius: 0.30rem;
+      text-align: left;
+    }
 
-    &.router-link-exact-active {
-      color: #F56800;
+    a {
+      font-weight: bold;
+      text-decoration: none;
+
+      font-family: Exo;
+      background-color: black;
+      color: var(--surface-50);
+      border: none;
+
+      &.router-link-exact-active {
+        color: #F56800;
+      }
     }
   }
-}
 </style>

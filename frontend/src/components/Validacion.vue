@@ -202,14 +202,14 @@
                             label: 'Test',
                             data: [],
                             fill: false,
-                            borderColor: '#42A5F5',
+                            borderColor: '#F56800',
                             tension: 0
                         },
                         {
                             label: 'Pronostico',
                             data: [],
                             fill: false,
-                            borderColor: '#FFA726',
+                            borderColor: '#000000',
                             tension: 0
                         }
                     ]
