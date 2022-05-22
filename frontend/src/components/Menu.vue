@@ -22,13 +22,13 @@
         <Accordion class="menu-accordion">
           <AccordionTab>
             <template #header>
-              <i class="pi pi-sitemap mr-2"></i>
+              <i class="pi pi-th-large mr-2"></i>
               Clustering
             </template>
             <ul class="p-0">
               <router-link to="/h-clust">
                 <li>
-                  <i class="pi pi-share-alt mr-2"></i>
+                  <i class="pi pi-sitemap mr-2"></i>
                   Jerárquico
                 </li>
               </router-link>
@@ -46,19 +46,19 @@
         <Accordion class="menu-accordion">
           <AccordionTab>
             <template #header>
-              <i class="pi pi-sitemap mr-2"></i>
+              <i class="pi pi-chart-line mr-2"></i>
               Pronóstico
             </template>
             <ul class="p-0">
               <router-link to="/a-prediction">
                 <li>
-                  <i class="pi pi-share-alt mr-2"></i>
+                  <i class="pi pi-sitemap mr-2"></i>
                   Árboles de decisión
                 </li>
               </router-link>
               <router-link to="/b-prediction">
                 <li>
-                  <i class="pi pi-share-alt mr-2"></i>
+                  <i class="pi pi-sitemap mr-2"></i>
                   Bosques Aleatorios
                 </li>
               </router-link>
@@ -70,25 +70,25 @@
         <Accordion class="menu-accordion">
           <AccordionTab>
             <template #header>
-              <i class="pi pi-sitemap mr-2"></i>
+              <i class="pi pi-sort-alpha-down-alt mr-2"></i>
               Clasificación
             </template>
             <ul class="p-0">
               <router-link to="/regression">
                 <li>
-                  <i class="pi pi-share-alt mr-2"></i>
+                  <i class="pi pi-chart-line mr-2"></i>
                   Regresión Logística
                 </li>
               </router-link>
               <router-link to="/a-classification">
                 <li>
-                  <i class="pi pi-share-alt mr-2"></i>
+                  <i class="pi pi-sitemap mr-2"></i>
                   Árboles de decisión
                 </li>
               </router-link>
               <router-link to="/b-classification">
                 <li>
-                  <i class="pi pi-share-alt mr-2"></i>
+                  <i class="pi pi-sitemap mr-2"></i>
                   Bosques Aleatorios
                 </li>
               </router-link>
