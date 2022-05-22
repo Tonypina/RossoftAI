@@ -28,8 +28,23 @@
           </div>
         </div>
         <div class="pt-5" v-if="this.centroides.length > 0">
-          <h2>Clusters obtenidos</h2>
-          <Centroides :centroides="this.centroides" :dataClust="this.data_clust"/>
+          <Button label="Mostrar datos con etiqueta" @click="show_clust" />
+          <div v-if="this.show_clust_bool">
+            <h2>Datos con etiquetas</h2>
+            <DataTable :value="data_clust" ref="dt" responsiveLayout="scroll" :scrollable="true" scrollHeight="400px">
+              <template #header>
+                <div style="text-align: left">
+                  <Button icon="pi pi-external-link" label="Exportar" @click="exportCSV($event)" />
+                </div>
+              </template>
+              <Column v-for="col of columns_data_clust" :field="col.field" :header="col.header" :key="col.field">
+              </Column>
+            </DataTable>
+          </div>
+          <div class="pt-5">
+            <h2>Clusters obtenidos</h2>
+            <Centroides :centroides="this.centroides" :dataClust="this.data_clust" />
+          </div>
         </div>
       </div>
     </div>
@@ -42,13 +57,17 @@
   import Centroides from '../../components/Centroides'
   import Chart from 'primevue/chart'
   import InputText from 'primevue/inputtext'
+  import DataTable from 'primevue/datatable'
+  import Column from 'primevue/column'
   import Button from 'primevue/button'
 
   import {
     defineComponent
   } from '@vue/runtime-core';
 
-  import {axiosInst} from '../../axios-api'
+  import {
+    axiosInst
+  } from '../../axios-api'
 
   export default defineComponent({
     name: 'PartitionView',
@@ -59,13 +78,17 @@
       Centroides,
       Chart,
       InputText,
+      DataTable,
+      Column,
       Button
     },
 
     created() {
       this.centroides = [],
-        this.data_clust = [],
-        this.elbow,
+        this.data_clust = []
+      this.columns_data_clust = []
+      this.show_clust_bool = false
+      this.elbow,
         this.nClust,
         this.selectedCarac = []
     },
@@ -75,6 +98,8 @@
         data_name: null,
         centroides: null,
         data_clust: null,
+        columns_data_clust: null,
+        show_clust_bool: null,
         elbow: null,
         nClust: null,
         selectedCarac: null,
@@ -94,8 +119,25 @@
 
     methods: {
 
+      show_clust() {
+        var headersList = Object.keys(this.data_clust[0])
+
+        for (let i = 0; i < headersList.length; i++) {
+          this.columns_data_clust[i] = {
+            field: headersList[i],
+            header: headersList[i]
+          }
+        }
+
+        this.show_clust_bool = true
+      },
+
+      exportCSV() {
+        this.$refs.dt.exportCSV();
+      },
+
       sendNumClust() {
-        
+
         axiosInst.get('/rossoftai/runAlgorithm/', {
           params: {
             name: this.data_name,

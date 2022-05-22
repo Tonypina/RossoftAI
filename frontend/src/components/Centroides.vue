@@ -87,7 +87,6 @@
                 }
             }
 
-            console.log(data_aux_2)
         },
 
         data() {

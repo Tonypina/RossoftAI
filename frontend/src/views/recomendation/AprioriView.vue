@@ -54,7 +54,12 @@
     <div class="">
       <h2 class="pb-2">Reglas de Asociación Obtenidas</h2>
       <div class="">
-        <DataTable :value="reglas" responsiveLayout="scroll" :scrollable="true" scrollHeight="400px">
+        <DataTable :value="reglas" ref="dt" responsiveLayout="scroll" :scrollable="true" scrollHeight="400px">
+          <template #header>
+            <div style="text-align: left">
+              <Button icon="pi pi-external-link" label="Exportar" @click="exportCSV($event)" />
+            </div>
+          </template>
           <Column v-for="col of columns_reglas" :field="col.field" :header="col.header" :key="col.field"></Column>
         </DataTable>
       </div>
@@ -70,6 +75,7 @@
   import ColumnGroup from 'primevue/columngroup';
   import Row from 'primevue/row';
   import InputText from 'primevue/inputtext';
+  import Button from 'primevue/button';
 
   import {
     axiosInst
@@ -88,7 +94,8 @@
       ColumnGroup,
       Row,
       Chart,
-      InputText
+      InputText,
+      Button
     },
     data() {
       return {
@@ -134,38 +141,43 @@
     },
     created() {
       this.columns_datos = [{
-          field: 'Item',
-          header: 'Item'
-        },
-        {
-          field: 'Frecuencia',
-          header: 'Frecuencia'
-        },
-        {
-          field: 'Porcentaje',
-          header: 'Porcentaje'
-        }
-      ],
+            field: 'Item',
+            header: 'Item'
+          },
+          {
+            field: 'Frecuencia',
+            header: 'Frecuencia'
+          },
+          {
+            field: 'Porcentaje',
+            header: 'Porcentaje'
+          }
+        ],
 
-      this.columns_reglas = [{
-          field: 'items',
-          header: 'Regla'
-        },
-        {
-          field: 'support',
-          header: 'Soporte'
-        },
-        {
-          field: 'confidence',
-          header: 'Confianza'
-        },
-        {
-          field: 'lift',
-          header: 'Elevación'
-        },
-      ]
+        this.columns_reglas = [{
+            field: 'items',
+            header: 'Regla'
+          },
+          {
+            field: 'support',
+            header: 'Soporte'
+          },
+          {
+            field: 'confidence',
+            header: 'Confianza'
+          },
+          {
+            field: 'lift',
+            header: 'Elevación'
+          },
+        ]
     },
     methods: {
+
+      exportCSV() {
+        this.$refs.dt.exportCSV();
+      },
+
       uploader(event) {
 
         var formData = new FormData();
@@ -196,7 +208,7 @@
 
               var labelsList = new Array()
               var frequencyList = new Array()
-              
+
               this.datos.forEach(element => {
                 labelsList[labelsList.length] = element.Item
               })
