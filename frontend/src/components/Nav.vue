@@ -1,6 +1,6 @@
 <template>
   <nav class="h-4rem z-5">
-    <ul class="h-full px-6 mt-0 flex justify-content-center align-items-center">
+    <!-- <ul class="h-full px-6 mt-0 flex justify-content-center align-items-center">
       <router-link to="/">
         <li class="inline">
           <i class="pi pi-link mr-2"></i>
@@ -13,7 +13,7 @@
           Documentación
         </li>
       </router-link>
-    </ul>
+    </ul> -->
   </nav>
 </template>
 
